@@ -27,3 +27,17 @@
 ![数据归并](https://raw.githubusercontent.com/securityRoad/images/main/202102171608251.png)
 ![日志页面](https://raw.githubusercontent.com/securityRoad/images/main/20210217161138.png)
 ![](https://raw.githubusercontent.com/securityRoad/images/main/20210217161627.png)
+
+### 使用说明
+1. 给网站添加伪静态
+  ```Nginx
+    if (!-e $request_filename) {
+        rewrite ^(.*)$ /index.php$1 last;
+    }
+  ```
+  ```Apache
+    if (!-e $request_filename) {
+        rewrite ^(.*)$ /index.php$1 last;
+    }
+  ```
+2. 
