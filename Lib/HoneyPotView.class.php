@@ -362,10 +362,10 @@ Html;
                     else
                         $page .= "<li><a href=\"".((Typecho_Request::getInstance()->get("page",1)+1)<=$this->pageNum?$this->buildUrl(Typecho_Request::getInstance()->get("page",1)+1):"#")."&action=detailed&attack=".Typecho_Request::getInstance()->get("attack")."&isContain=".Typecho_Request::getInstance()->get("isContain",0)."&bugtype=".Typecho_Request::getInstance()->get("bugtype","all")."\">&raquo;</a></li>";
             } else {
-                if(Typecho_Request::getInstance()->get("action") == "index")
-                    header("Location:".$this->buildUrl(1)."&action=index&attack=".Typecho_Request::getInstance()->get("attack","all"));
-                else
+                if(Typecho_Request::getInstance()->get("action","index") != "index")
                     header("Location:".$this->buildUrl(1)."&action=detailed&attack=all&bugtype=all");
+                else
+                    header("Location:".__TYPECHO_ADMIN_DIR__."index.php");
             }
             return <<<Html
             <ul class="typecho-pager">
