@@ -23,10 +23,11 @@
 - 数据备份
 
 ### 图示
-![插件配置](https://github.com/securityRoad/images/raw/main/20210217154421.png)
-![数据归并](https://raw.githubusercontent.com/securityRoad/images/main/202102171608251.png)
-![日志页面](https://raw.githubusercontent.com/securityRoad/images/main/20210217161138.png)
+![](https://github.com/securityRoad/images/raw/main/20210217154421.png)
+![](https://raw.githubusercontent.com/securityRoad/images/main/202102171608251.png)
+![](https://raw.githubusercontent.com/securityRoad/images/main/20210217161138.png)
 ![](https://raw.githubusercontent.com/securityRoad/images/main/20210217161627.png)
+![](https://raw.githubusercontent.com/securityRoad/images/main/20210217190854.png)
 
 ### 使用说明
 1. 给网站添加伪静态
@@ -51,10 +52,10 @@
       ```
 3. 插件会添加如下代码到config.inc.php文件中
     ```php
-       require_once __TYPECHO_ROOT_DIR__.__TYPECHO_PLUGIN_DIR__.'/HoneyPot/Honeypot.php';
+      require_once __TYPECHO_ROOT_DIR__.__TYPECHO_PLUGIN_DIR__.'/HoneyPot/Honeypot.php';
     ```
 4. Typecho不支持not like查询，插件会将notlike关键字写入到Query.php
     ```php
        /** 数据库关键字 */
-       const KEYWORDS = '*PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL|NOTLIKE';
+      const KEYWORDS = '*PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL|NOTLIKE';
     ```
