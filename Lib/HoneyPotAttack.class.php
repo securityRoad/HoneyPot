@@ -91,8 +91,7 @@
 			return implode(",",$this->attackType);
 		}
 
-		private function isExhaustion($pathInfo)
-	    {
+		private function isExhaustion($pathInfo){
 	        foreach ($this->routingTable as $key => $route) {
 	        	if(strpos($route["widget"],"HoneyPot")!==false){
 	        		continue;
