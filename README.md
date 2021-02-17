@@ -2,7 +2,7 @@
 
 [![PHP Version](https://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](http://www.php.net/)
 ![HoneyPot Plugin Version](https://img.shields.io/badge/HoneyPot%20Version-v1.0-red.svg)
-![HoneyPot Plugin Package Size](https://img.shields.io/badge/Compressed%20Package%20Size-92KB-blue.svg)
+![HoneyPot Plugin Package Size](https://img.shields.io/badge/Compressed%20Package%20Size-93KB-blue.svg)
 
 ### 现有功能概括
 - 蜜罐功能
@@ -51,10 +51,10 @@
       ```
 3. 插件会添加如下代码到config.inc.php文件中
     ```php
-        require_once __TYPECHO_ROOT_DIR__.__TYPECHO_PLUGIN_DIR__.'/HoneyPot/Honeypot.php';
+       require_once __TYPECHO_ROOT_DIR__.__TYPECHO_PLUGIN_DIR__.'/HoneyPot/Honeypot.php';
     ```
 4. Typecho不支持not like查询，插件会将notlike关键字写入到Query.php
     ```php
-        /** 数据库关键字 */
-        const KEYWORDS = '*PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL|NOTLIKE';
-    ``
+       /** 数据库关键字 */
+       const KEYWORDS = '*PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL|NOTLIKE';
+    ```
