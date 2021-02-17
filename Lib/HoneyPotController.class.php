@@ -122,15 +122,11 @@
 		}
 
 		private function screen($logs){
-			$model = $this->_model->select(["COUNT(client_ip)"=>"total"])->from('table.honeypot_log');
-			if(Typecho_Widget::widget('Widget_Options')->plugin('HoneyPot')->pluginget == 0){
-				$model = $model->where("url NOT LIKE '%HoneyPot%'");
-			}
 			$clientips = [];
 			$log = [];
 			foreach($logs as $key => $value){
 				if(!in_array($value["client_ip"], $clientips) && strpos($value["url"],"ico")===false){
-					$value["total"] = $this->_model->fetchRow($model->where("client_ip = ?",$value["client_ip"]))["total"];
+					$value["total"] = $this->_model->fetchRow($this->_model->select(["COUNT(client_ip)"=>"total"])->from('table.honeypot_log')->where("client_ip = ?",$value["client_ip"]))["total"];
 					$log[] = $value;
 					$clientips[] = $value["client_ip"];
 				}
