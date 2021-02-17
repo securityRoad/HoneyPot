@@ -173,8 +173,8 @@ Html;
             $list = "";
             $rules["正常访问"] = "";
             $rules["目录/文件/参数枚举"] = "";
-            $rules["穷举"] = "";
-            $rules["疑似攻击者访问"] = "";
+            $rules["暴力穷举"] = "";
+            $rules["疑似攻击者"] = "";
             foreach($rules as $name => $value){
                 $list .= "<option value=\"{$name}\"".($request->get("bugtype")==$name?'selected="true"':"").">{$name}</option>";
             }
