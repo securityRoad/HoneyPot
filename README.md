@@ -30,14 +30,21 @@
 
 ### 使用说明
 1. 给网站添加伪静态
+  Nginx
   ```Nginx
     if (!-e $request_filename) {
         rewrite ^(.*)$ /index.php$1 last;
     }
   ```
+  apache在根目录下修改.htaccess文件内容如下
   ```Apache
-    if (!-e $request_filename) {
-        rewrite ^(.*)$ /index.php$1 last;
-    }
+    RewriteBase /
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ /index.php/$1 [L]
   ```
-2. 
+2. 更改管理目录，不含admin关键字，config.inc.php以及目录名称
+  ```php
+    /** 后台路径(相对路径) */
+    define('__TYPECHO_ADMIN_DIR__', '/manager/');
+  ```
