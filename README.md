@@ -23,4 +23,5 @@
 - 数据备份
 
 ### 图示
-![](https://github.com/securityRoad/images/raw/main/20210217154421.png)
+![插件配置](https://github.com/securityRoad/images/raw/main/20210217154421.png)
+![数据归并](https://raw.githubusercontent.com/securityRoad/images/main/20210217160825.png)
