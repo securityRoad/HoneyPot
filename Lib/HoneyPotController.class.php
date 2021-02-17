@@ -64,8 +64,8 @@
 		}
 
 		public function detailed(){
-			$model = $this->_model->select()->from('table.honeypot_log');
-			$total = $this->_model->select(["COUNT(*)"=>"total"])->from('table.honeypot_log');
+			$model = $this->_model->select()->from('table.honeypot_log')->where("url !='%2Ffavicon.ico'");
+			$total = $this->_model->select(["COUNT(*)"=>"total"])->from('table.honeypot_log')->where("url !='%2Ffavicon.ico'");
 			if(Typecho_Request::getInstance()->get("attack","all") == "all" && Typecho_Request::getInstance()->get("bugtype","all") == "all"){
 				if(Typecho_Request::getInstance()->get("isContain",0)){
 					$model = $model->where("vulnerability like '%蜜罐%'");
@@ -93,10 +93,6 @@
 						$model = $model->where("client_ip = ?",Typecho_Request::getInstance()->get("attack","all"))->where("vulnerability NOT LIKE '%蜜罐%'");
 						$total = $total->where("client_ip = ?",Typecho_Request::getInstance()->get("attack","all"))->where("vulnerability NOT LIKE '%蜜罐%'");
 					}
-					// foreach(json_decode(Typecho_Widget::widget('Widget_Options')->plugin('HoneyPot')->bugrules) as $key => $value){
-					// 	$model = $model->where("vulnerability like ?","%{$key}%");
-					// 	$total = $total->where("vulnerability like ?","%{$key}%");
-					// }
 				}
 			} else if(Typecho_Request::getInstance()->get("attack","all") == "all" && Typecho_Request::getInstance()->get("bugtype","all") != "all"){
 				if(Typecho_Request::getInstance()->get("isContain",0)){

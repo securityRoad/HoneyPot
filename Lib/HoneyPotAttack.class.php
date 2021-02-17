@@ -48,35 +48,35 @@
 			}
 			if(!$this->isExhaustion(Typecho_Request::getInstance()->getPathInfo()) && !preg_match("#".Typecho_Request::getInstance()->getRequestRoot()."#i",urldecode($this->referer)) && $_SERVER["REQUEST_URI"] != "/"){
 				$this->attackType[] = "目录/文件/参数枚举";
-				if(!isset($_SESSION["exhaustioncount"])){
-					$_SESSION["exhaustiondircount"] = 1;
+				if(!isset($_SESSION["{$_SERVER['REMOTE_ADDR']}exhaustioncount"])){
+					$_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"] = 1;
 				} else {
-					$_SESSION["exhaustiondircount"]++;
+					$_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"]++;
 				}
 			}
 			if(preg_match("#^\/".trim(__TYPECHO_ADMIN_DIR__,"/")."\/login.php#i",Typecho_Request::getInstance()->getRequestURI())){
-				if(isset($_SESSION["exhaustiondircount"]) && $_SESSION["exhaustiondircount"]>1){
-					$this->attackType[] = "疑似攻击者暴力穷举{$_SESSION['exhaustiondircount']}次后找到后台";
+				if(isset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"]) && $_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"]>1){
+					$this->attackType[] = "疑似攻击者暴力穷举".$_SESSION[$_SERVER['REMOTE_ADDR'].'exhaustiondircount']."次后找到后台";
 				} else {
-					unset($_SESSION["exhaustiondircount"]);
+					unset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"]);
 				}
 			}
 			if(Typecho_Request::getInstance()->isPost() && preg_match("#".Typecho_Request::getInstance()->getRequestRoot().__TYPECHO_ADMIN_DIR__."login.php"."#i",urldecode($this->referer))){
-				if(!isset($_SESSION["exhaustionpasscount"])){
-					$_SESSION["exhaustionpasscount"] = 1;
-				} else if($_SESSION["exhaustionpasscount"]>=2){
-					$this->attackType[] = "疑似攻击者第{$_SESSION['exhaustionpasscount']}次暴力穷举用户(".Typecho_Request::getInstance()->get("name","未知").")的密码";
-					$_SESSION["exhaustionpasscount"]++;
+				if(!isset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"])){
+					$_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"] = 1;
+				} else if($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]>=2){
+					$this->attackType[] = "疑似攻击者第".$_SESSION[$_SERVER['REMOTE_ADDR'].'exhaustionpasscount']."次暴力穷举用户(".Typecho_Request::getInstance()->get("name","未知").")的密码";
+					$_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]++;
 				} else {
-					$_SESSION["exhaustionpasscount"]++;
+					$_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]++;
 				}
 			}
 			if($this->isLogin){
-				if(isset($_SESSION["exhaustionpasscount"]) && $_SESSION["exhaustionpasscount"]>1){
-					if($_SESSION["exhaustionpasscount"] != 9999999999){
-						$this->attackType[] = "疑似攻击者登录后台，暴力穷举{$_SESSION['exhaustionpasscount']}次后登录成功";
-						$_SESSION["exhaustionpasscount"] == 9999999999;
-					} else if($_SESSION["exhaustionpasscount"] == 9999999999){
+				if(isset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]) && $_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]>1){
+					if($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"] != 9999999999){
+						$this->attackType[] = "疑似攻击者登录后台，暴力穷举".$_SESSION[$_SERVER['REMOTE_ADDR'].'exhaustionpasscount']."次后登录成功";
+						$_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"] == 9999999999;
+					} else if($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"] == 9999999999){
 						$this->attackType[] = "疑似攻击者";
 					}
 				}
