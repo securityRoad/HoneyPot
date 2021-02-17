@@ -9,7 +9,7 @@ CREATE TABLE `typecho_honeypot_log` (
   `get_data` text DEFAULT NULL,
   `referer` text DEFAULT NULL,
   `platformaccount` text DEFAULT NULL,
-  `vulnerability` varchar(30) DEFAULT '',
+  `vulnerability` text DEFAULT NULL,
   `time` int(32) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
