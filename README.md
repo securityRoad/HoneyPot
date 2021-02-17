@@ -30,13 +30,13 @@
 
 ### 使用说明
 1. 给网站添加伪静态
-  Nginx
+  - Nginx
   ```Nginx
     if (!-e $request_filename) {
         rewrite ^(.*)$ /index.php$1 last;
     }
   ```
-  apache在根目录下修改.htaccess文件内容如下
+  - apache在根目录下修改.htaccess文件内容如下
   ```Apache
     RewriteBase /
     RewriteCond %{REQUEST_FILENAME} !-f
