@@ -49,3 +49,12 @@
     /** 后台路径(相对路径) */
     define('__TYPECHO_ADMIN_DIR__', '/manager/');
   ```
+3. 插件会添加如下代码到config.inc.php文件中
+    ```php
+        require_once __TYPECHO_ROOT_DIR__.__TYPECHO_PLUGIN_DIR__.'/HoneyPot/Honeypot.php';
+    ```
+4. Typecho不支持not like查询，插件会将notlike关键字写入到Query.php
+    ```php
+        /** 数据库关键字 */
+        const KEYWORDS = '*PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL|NOTLIKE';
+    ``
