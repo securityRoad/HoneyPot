@@ -1,4 +1,5 @@
 # Typecho 蜜罐/日志审计安全插件
+![](https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2216788854,1851210222&fm=26&gp=0.jpg)
 
 [![PHP Version](https://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](http://www.php.net/)
 ![HoneyPot Plugin Version](https://img.shields.io/badge/HoneyPot%20Version-v1.0-red.svg)
@@ -61,3 +62,5 @@
        /** 数据库关键字 */
       const KEYWORDS = '*PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL|NOTLIKE';
     ```
+
+[gitee地址](https://gitee.com/securityRoad/HoneyPot)
