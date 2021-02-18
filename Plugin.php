@@ -1,12 +1,12 @@
 <?php
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
- * Safe之路打造HoneyPot插件为个人蓝军插件及日志管理，方便管控
+ * Safe之路打造HoneyPot插件为个人安全插件及日志管理，方便管控
  * 
  * @package HoneyPot
  * @author Only_rain
- * @version 1.0.0
- * @link http://github.com/
+ * @version 1.0
+ * @link http://github.com/securityRoad
  */
 class HoneyPot_Plugin implements Typecho_Plugin_Interface
 {
