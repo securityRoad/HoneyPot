@@ -42,7 +42,7 @@
 				call_user_func([__CLASS__,"index"]);
 			}
 		}
-
+		// 首页
 		public function index(){
 			$model = $this->_model->select()->from('table.honeypot_log');
 			if(Typecho_Widget::widget('Widget_Options')->plugin('HoneyPot')->pluginget == 0){
@@ -70,7 +70,7 @@
 			}
 			$this->_view->assign("ipandaccount",$ipAccount)->assign("clientips",explode(",",$clientIps))->assign("honeylogs",$honeylogs)->assign("tbody",$pagelog)->fetch(__FUNCTION__);
 		}
-
+		// 详情页面
 		public function detailed(){
 			$model = $this->_model->select()->from('table.honeypot_log')->where("url !='%2Ffavicon.ico'");
 			$total = $this->_model->select(["COUNT(*)"=>"total"])->from('table.honeypot_log')->where("url !='%2Ffavicon.ico'");
