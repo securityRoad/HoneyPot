@@ -2,7 +2,7 @@
 
 [![PHP Version](https://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](http://www.php.net/)
 ![HoneyPot Plugin Version](https://img.shields.io/badge/HoneyPot%20Version-v1.0-red.svg)
-![HoneyPot Plugin Package Size](https://img.shields.io/badge/Compressed%20Package%20Size-93KB-blue.svg)
+![HoneyPot Plugin Package Size](https://img.shields.io/badge/Compressed%20Package%20Size-95KB-blue.svg)
 
 ### 现有功能概括
 - 蜜罐功能
