@@ -33,8 +33,10 @@
 1. 给网站添加伪静态
     - Nginx
       ```Nginx
-        if (!-e $request_filename) {
-            rewrite ^(.*)$ /index.php$1 last;
+        location / {
+           if (!-e $request_filename) {
+           rewrite  ^(.*)$  /index.php?s=$1  last;
+           break;
         }
       ```
     - apache在根目录下修改.htaccess文件内容如下
