@@ -56,7 +56,7 @@
       ```
 3. 将HoneyPot包放到/usr/plugins目录下
 
-5. 插件会添加如下代码到config.inc.php文件中
+4. 插件会添加如下代码到config.inc.php文件中
     ```php
       require_once __TYPECHO_ROOT_DIR__.__TYPECHO_PLUGIN_DIR__.'/HoneyPot/Honeypot.php';
     ```
