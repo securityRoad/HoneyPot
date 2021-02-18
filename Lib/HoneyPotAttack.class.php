@@ -17,6 +17,8 @@
 			$this->dataPacket = $dataPacket;
 			$this->referer = $referer;
 			$this->isLogin = is_file(__TYPECHO_ROOT_DIR__.__TYPECHO_PLUGIN_DIR__."/HoneyPot/Lib/HoneyPotCache/".md5("{$_SERVER['REMOTE_ADDR']}isLogin"))?true:false;
+			$this->loginthreshold = (Typecho_Widget::widget('Widget_Options')->plugin('HoneyPot')->loginthreshold == "three")?3:6;
+			$this->filethreshold = (Typecho_Widget::widget('Widget_Options')->plugin('HoneyPot')->filethreshold == "three")?3:6;
 			$this->rules = json_decode(Typecho_Widget::widget('Widget_Options')->plugin('HoneyPot')->bugrules);
 			$this->honeypot = Typecho_Widget::widget('Widget_Options')->plugin('HoneyPot')->HoneyPotTpl;
 			$this->testing($referer);
@@ -48,38 +50,39 @@
 			}
 			if(!$this->isExhaustion(Typecho_Request::getInstance()->getPathInfo()) && !preg_match("#".Typecho_Request::getInstance()->getRequestRoot()."#i",urldecode($this->referer)) && $_SERVER["REQUEST_URI"] != "/"){
 				$this->attackType[] = "目录/文件/参数枚举";
-				if(!isset($_SESSION["{$_SERVER['REMOTE_ADDR']}exhaustioncount"])){
+				if(!isset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"])){
 					$_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"] = 1;
 				} else {
 					$_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"]++;
 				}
 			}
 			if(preg_match("#^\/".trim(__TYPECHO_ADMIN_DIR__,"/")."\/login.php#i",Typecho_Request::getInstance()->getRequestURI())){
-				if(isset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"]) && $_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"]>1){
-					$this->attackType[] = "疑似攻击者暴力穷举".$_SESSION[$_SERVER['REMOTE_ADDR'].'exhaustiondircount']."次后找到后台";
+				if(isset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"]) && $_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"]>$this->filethreshold){
+					$this->attackType[] = "疑似攻击者目录/文件/参数枚举".$_SESSION[$_SERVER['REMOTE_ADDR'].'exhaustiondircount']."次后找到后台";
+					unset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"]);
 				} else {
+					$this->attackType[] = "进入后台登录页面";
 					unset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"]);
 				}
 			}
 			if(Typecho_Request::getInstance()->isPost() && preg_match("#".Typecho_Request::getInstance()->getRequestRoot().__TYPECHO_ADMIN_DIR__."login.php"."#i",urldecode($this->referer))){
 				if(!isset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"])){
 					$_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"] = 1;
-				} else if($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]>=2){
-					$this->attackType[] = "疑似攻击者第".$_SESSION[$_SERVER['REMOTE_ADDR'].'exhaustionpasscount']."次暴力穷举用户(".Typecho_Request::getInstance()->get("name","未知").")的密码";
+				} else if($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]>$this->loginthreshold){
+					$this->attackType[] = "疑似攻击者第".($_SESSION[$_SERVER['REMOTE_ADDR'].'exhaustionpasscount']-$this->loginthreshold)."次暴力穷举用户(".Typecho_Request::getInstance()->get("name","未知").")的密码";
 					$_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]++;
 				} else {
 					$_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]++;
 				}
 			}
 			if($this->isLogin){
-				if(isset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]) && $_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]>1){
-					if($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"] != 9999999999){
-						$this->attackType[] = "疑似攻击者登录后台，暴力穷举".$_SESSION[$_SERVER['REMOTE_ADDR'].'exhaustionpasscount']."次后登录成功";
-						$_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"] == 9999999999;
-					} else if($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"] == 9999999999){
-						$this->attackType[] = "疑似攻击者";
-					}
+				if(isset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]) && $_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]>$this->loginthreshold){
+					$this->attackType[] = "疑似攻击者暴力穷举".$_SESSION[$_SERVER['REMOTE_ADDR'].'exhaustionpasscount']."次后登录成功";
+					unset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]);
 				}
+			}
+			if(preg_match("#\/action\/plugins-edit\?config=HoneyPot#i",Typecho_Request::getInstance()->getRequestURI())){
+				unset($this->attackType);
 			}
 			if(empty($this->attackType)){
 				$this->attackType[] = "正常访问";

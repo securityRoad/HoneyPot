@@ -108,13 +108,25 @@ class HoneyPot_Plugin implements Typecho_Plugin_Interface
             array("AdminHoneyPot","ThinkPHPHoneyPot"),
             "蜜罐配置 (只读)"
         );
-        $vulnerability = new Typecho_Widget_Helper_Form_Element_Textarea('bugrules', NULL, '{"SQL注入": ["(?:(union(.*?)select))","(?:(?:current_)user|database|schema|connection_id)~s*~(","into(~s+)+(?:dump|out)file~s*"],"XSS":["(onmouseover|onerror|onload|onabort|onblur|onchange|onclick|ondblclick|onfocus|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|onreset|onresize|onselect|onsubmit|onunload)~=","~<(iframe|script|body|img|layer|div|meta|style|base|object|input)"]}', _t('漏洞匹配规则配置(请自行检测JSON格式否则无法匹配数据包中漏洞)请将\\写为~'));
+        $loginthreshold = new Typecho_Widget_Helper_Form_Element_Select(
+            'loginthreshold', array(
+                'three' => '3',
+                'six' => '6'
+            ), 'three', _t('后台登录阈值'));
+        $filethreshold = new Typecho_Widget_Helper_Form_Element_Select(
+            'filethreshold', array(
+                'three' => '3',
+                'six' => '6'
+            ), 'three', _t('后台登录界面枚举阈值'));
+        $vulnerability = new Typecho_Widget_Helper_Form_Element_Textarea('bugrules', NULL, '{"SQL注入": ["(?:(union(.*?)select))","(?:(?:current_)user|database|schema|connection_id)~s*~(","into(~s+)+(?:dump|out)file~s*"],"XSS":["(onmouseover|onerror|onload|onabort|onblur|onchange|onclick|ondblclick|onfocus|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|onreset|onresize|onselect|onsubmit|onunload)~=","~<(iframe|script|body|img|layer|div|meta|style|base|object|input)"]}', _t('漏洞匹配规则配置(请自行检测JSON格式)请将\\写为~'));
 
-        $other = new Typecho_Widget_Helper_Form_Element_Textarea('otherrules', NULL, '{"baidu":["url","user"]}', _t('第三方账号获取配置请将\\写为~'));
+        $other = new Typecho_Widget_Helper_Form_Element_Textarea('otherrules', NULL, '{"baidu":["url","user"]}', _t('第三方账号获取规则配置(请自行检测JSON格式)\\写为~'));
         $form->addInput($capture);
         $form->addInput($clear);
         $form->addInput($block);
         $form->addInput($HoneyPotTpl);
+        $form->addInput($loginthreshold);
+        $form->addInput($filethreshold);
         $form->addInput($vulnerability);
         $form->addInput($other);
     }
