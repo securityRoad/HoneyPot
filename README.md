@@ -1,4 +1,4 @@
-# Typecho 蜜罐 :tw-1f36f: /日志审计安全插件
+# Typecho 蜜罐 :honey_pot: /日志审计安全插件
 ![](https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2216788854,1851210222&fm=26&gp=0.jpg)
 
 [![PHP Version](https://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](http://www.php.net/)
