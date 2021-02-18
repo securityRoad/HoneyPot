@@ -54,7 +54,7 @@
         /** 后台路径(相对路径) */
         define('__TYPECHO_ADMIN_DIR__', '/manager/');
       ```
-3. 将HoneyPot包放到/usr/plugins目录下
+3. 将HoneyPot包放到/站点根目录/usr/plugins目录下
 
 4. 插件会添加如下代码到config.inc.php文件中
     ```php
