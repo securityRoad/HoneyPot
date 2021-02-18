@@ -39,7 +39,7 @@
            break;
         }
       ```
-    - apache在根目录下修改.htaccess文件内容如下
+    - Apache在根目录下修改.htaccess文件内容如下
   
       ```Apache
         RewriteBase /
