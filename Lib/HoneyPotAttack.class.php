@@ -91,11 +91,11 @@
 					$this->attackType[] = "疑似攻击者暴力穷举".$_SESSION[$_SERVER['REMOTE_ADDR'].'exhaustionpasscount']."次后登录成功";
 					unset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]);
 				}
-				if(isset($_SESSION[$_SERVER['REMOTE_ADDR']."loginpageinit"])){
-					$this->attackType["filepage"] = "疑似攻击者页面信息探测";
-				}
+				
 				if (preg_match("#^\/".trim(__TYPECHO_ADMIN_DIR__,"/")."\/.*#i",Typecho_Request::getInstance()->getRequestURI()) && isset($_SESSION[$_SERVER['REMOTE_ADDR']."loginpageinit"])){
-					$this->attackType["filepage"] = "疑似攻击者后台任意操作";
+					$this->attackType[] = "疑似攻击者后台任意操作";
+				} else if(isset($_SESSION[$_SERVER['REMOTE_ADDR']."loginpageinit"])){
+					$this->attackType[] = "疑似攻击者页面信息探测";
 				}
 			}
 			if(preg_match("#\/action\/plugins-edit\?config=HoneyPot#i",Typecho_Request::getInstance()->getRequestURI())){
