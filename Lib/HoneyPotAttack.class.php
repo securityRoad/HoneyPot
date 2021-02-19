@@ -24,7 +24,7 @@
 			$this->page = explode(",",Typecho_Db::get()->fetchRow(Typecho_Db::get()->select(["GROUP_CONCAT(slug,',',cid)"=>"slug"])->from('table.contents'))["slug"]);
 			$this->dataPacket = $dataPacket;
 			$this->referer = $referer;
-			$this->isLogin = is_file(__TYPECHO_ROOT_DIR__.__TYPECHO_PLUGIN_DIR__."/HoneyPot/Lib/HoneyPotCache/".md5("{$_SERVER['REMOTE_ADDR']}isLogin"))?true:false;
+			$this->isLogin = isset($_SESSION["isLogin"])?true:false;
 			$this->loginthreshold = (Typecho_Widget::widget('Widget_Options')->plugin('HoneyPot')->loginthreshold == "three")?3:6;
 			$this->filethreshold = (Typecho_Widget::widget('Widget_Options')->plugin('HoneyPot')->filethreshold == "three")?3:6;
 			$this->rules = json_decode(Typecho_Widget::widget('Widget_Options')->plugin('HoneyPot')->bugrules);
@@ -76,7 +76,7 @@
 					unset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustiondircount"]);
 				}
 			}
-			if(Typecho_Request::getInstance()->isPost() && preg_match("#".Typecho_Request::getInstance()->getRequestRoot().__TYPECHO_ADMIN_DIR__."login.php"."#i",urldecode($this->referer))){
+			if(Typecho_Request::getInstance()->isPost() && preg_match("#".Typecho_Request::getInstance()->getRequestRoot().__TYPECHO_ADMIN_DIR__."login.php#i",urldecode($this->referer))){
 				if(!isset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"])){
 					$_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"] = 1;
 				} else if($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]>$this->loginthreshold){
@@ -91,15 +91,13 @@
 					$this->attackType[] = "疑似攻击者暴力穷举".$_SESSION[$_SERVER['REMOTE_ADDR'].'exhaustionpasscount']."次后登录成功";
 					unset($_SESSION[$_SERVER['REMOTE_ADDR']."exhaustionpasscount"]);
 				}
-				
 				if (preg_match("#^\/".trim(__TYPECHO_ADMIN_DIR__,"/")."\/.*#i",Typecho_Request::getInstance()->getRequestURI()) && isset($_SESSION[$_SERVER['REMOTE_ADDR']."loginpageinit"])){
 					$this->attackType[] = "疑似攻击者后台任意操作";
 				} else if(isset($_SESSION[$_SERVER['REMOTE_ADDR']."loginpageinit"])){
 					$this->attackType[] = "疑似攻击者页面信息探测";
+				} else if(preg_match("#\/action\/.*#i",Typecho_Request::getInstance()->getRequestURI())){
+					unset($this->attackType);
 				}
-			}
-			if(preg_match("#\/action\/plugins-edit\?config=HoneyPot#i",Typecho_Request::getInstance()->getRequestURI())){
-				unset($this->attackType);
 			}
 			if(empty($this->attackType)){
 				$this->attackType[] = "正常访问";

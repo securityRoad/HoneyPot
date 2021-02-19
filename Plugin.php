@@ -37,7 +37,7 @@ class HoneyPot_Plugin implements Typecho_Plugin_Interface
      * @throws Typecho_Plugin_Exception
      */
     public static function deactivate(){
-        if(Typecho_Db::get()->fetchRow(Typecho_Db::get()->select()->from('table.honeypot_log')->where("client_ip = ?",$_SERVER["REMOTE_ADDR"])->where("vulnerability like '%攻击者%'"))){
+        if(Typecho_Db::get()->fetchRow(Typecho_Db::get()->select(["COUNT(*)"=>"total"])->from('table.honeypot_log')->where("client_ip = ?",$_SERVER["REMOTE_ADDR"])->where("vulnerability like '%攻击者%'"))["total"]>3){
             header("Location:".__TYPECHO_ADMIN_DIR__);
             exit;
         }
@@ -75,6 +75,13 @@ class HoneyPot_Plugin implements Typecho_Plugin_Interface
         	$dbfile = str_replace("|NOTLIKE","",$dbfile);
         	file_put_contents(__TYPECHO_ROOT_DIR__."/var/Typecho/Db/Query.php",$dbfile);
         }
+        $_SESSION = array();
+        //判断 cookie 中是否保存 Session ID
+        if(isset($_COOKIE[session_name()])){
+            setcookie(session_name(),'',time()-3600, '/');
+        }
+        //彻底销毁 Session
+        session_destroy();
     }
     
     /**
@@ -86,7 +93,7 @@ class HoneyPot_Plugin implements Typecho_Plugin_Interface
      */
     public static function config(Typecho_Widget_Helper_Form $form)
     {
-        if(Typecho_Db::get()->fetchRow(Typecho_Db::get()->select()->from('table.honeypot_log')->where("client_ip = ?",$_SERVER["REMOTE_ADDR"])->where("vulnerability like '%攻击者%'"))){
+        if(Typecho_Db::get()->fetchRow(Typecho_Db::get()->select(["COUNT(*)"=>"total"])->from('table.honeypot_log')->where("client_ip = ?",$_SERVER["REMOTE_ADDR"])->where("vulnerability like '%攻击者%'"))["total"]>3){
             header("Location:".__TYPECHO_ADMIN_DIR__);
             exit;
         }
@@ -148,9 +155,8 @@ class HoneyPot_Plugin implements Typecho_Plugin_Interface
      */
     public static function render()
     {
-        $loginfile = __TYPECHO_ROOT_DIR__.__TYPECHO_PLUGIN_DIR__."/HoneyPot/Lib/HoneyPotCache/".md5("{$_SERVER['REMOTE_ADDR']}isLogin");
-        if(!is_file($loginfile) && Typecho_Widget::widget('Widget_User')->hasLogin()){
-            file_put_contents($loginfile,"");
+        if(!isset($_SESSION["isLogin"]) && Typecho_Widget::widget('Widget_User')->hasLogin()){
+            $_SESSION["isLogin"] = true;
         }
         // 获取路由表
         $routingTable = Typecho_Widget::widget('Widget_Options')->routingTable;
@@ -227,18 +233,12 @@ $(document).ready(function() {
         }
     }
     public static function addjs(){
-        $loginfile = __TYPECHO_ROOT_DIR__.__TYPECHO_PLUGIN_DIR__."/HoneyPot/Lib/HoneyPotCache/".md5("{$_SERVER['REMOTE_ADDR']}isLogin");
-        if(!Typecho_Widget::widget('Widget_User')->hasLogin() && is_file($loginfile)){
-            unlink($loginfile);
-            unset($_SESSION["exhaustionpasscount"]);
-        }
-        $filename = __TYPECHO_ROOT_DIR__.__TYPECHO_PLUGIN_DIR__."/HoneyPot/Lib/HoneyPotCache/{$_SERVER["REMOTE_ADDR"]}.php";
-        if(!is_file($filename)){
+        if(!isset($_SESSION[$_SERVER["REMOTE_ADDR"]])){
             return;
         }
-        $time = unserialize(str_replace(["/","*","<?php ","?>"],"",file_get_contents($filename)))["time"];
+        $time = $_SESSION[$_SERVER["REMOTE_ADDR"]];
         if((time()-60*60) >= $time){
-            unlink($filename);
+            unset($_SESSION[$_SERVER["REMOTE_ADDR"]]);
         } else {
             $otherrules = json_decode(Typecho_Widget::widget('Widget_Options')->plugin('HoneyPot')->otherrules);
             $otherjstpl = "$.ajax({url:'#url',datatype:'jsonp',success:function(res){\$.ajax({url:'/isLogin.js',dataType:'json',data:Base64.encode('#platform'+\"\t\"+res.#param),type:\"POST\",success:function(data){}});}})";
@@ -258,5 +258,7 @@ $(document).ready(function() {
 Html;
         }
     }
-    public function execute(){}
+
+    public function execute(){
+    }
 }

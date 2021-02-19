@@ -59,6 +59,7 @@
 			$this->initServerPort();
 			$this->initUrl();
 			$this->screeningAttack();
+			$this->isLogin();
 			$this->addLogs();
 			$this->enumeration();
 		}
@@ -155,19 +156,27 @@
 					"time" => time()
 				));
 			$this->link->query($insert);
-			if(!strstr($this->vulnerability,"正常访问") && !strstr($this->vulnerability,"蜜罐")){
+			if(!strstr($this->vulnerability,"正常访问") && !strstr($this->vulnerability,"蜜罐") && !strstr($this->vulnerability,"目录/文件/参数枚举")){
 				$this->attackLocation();
 			}
+		}
+
+		// 判断是否登录
+		private function isLogin(){
+			$loginstr = implode(",",$_COOKIE);
+	        if(isset($_SESSION["isLogin"]) && !strstr($loginstr,"typecho_uid") && !strstr($loginstr,"typecho_authCode")){
+	            unset($_SESSION["isLogin"]);
+	            unset($_SESSION[$_SERVER['REMOTE_ADDR']."loginpageinit"]);
+	        }
 		}
 
 		private function enumeration(){
 			$db = Typecho_Db::get();
 			$starttime = time();
 			$entime = $starttime-0.25;
-			$filename = __TYPECHO_ROOT_DIR__.__TYPECHO_PLUGIN_DIR__."/HoneyPot/Lib/HoneyPotCache/{$this->clientIp}.php";
 			if($db->fetchRow($db->query("select count(*) as total from `{$db->getPrefix()}honeypot_log` where client_ip='".addslashes($this->clientIp)."' AND `time` BETWEEN {$entime} AND {$starttime}"))["total"] >= 10){
-				if(!is_file($filename)){
-					file_put_contents($filename,"<?php /*".serialize(["time"=>time()])."*/?>");
+				if(!isset($_SESSION[$this->clientIp])){
+					$_SESSION[$this->clientIp] = time();
 				}
 				$this->attackLocation();
 			}
@@ -175,13 +184,8 @@
 
 		private function attackLocation(){
 			if(Typecho_Widget::widget('Widget_Options')->plugin('HoneyPot')->block == 1){
-				// print __TYPECHO_ADMIN_DIR__."options-plugin.php?config=HoneyPot";
-				// print urldecode($this->url);
-				// exit;
-				if(!preg_match("#action\/plugins-edit\?config=HoneyPot#i",urldecode($this->url))){
-					header("Location:".$this->location[rand(0,count($this->location)-1)]);
-					exit();
-				}
+				header("Location:".$this->location[rand(0,count($this->location)-1)]);
+				exit();
 			}
 		}
 
