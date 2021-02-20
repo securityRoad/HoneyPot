@@ -57,6 +57,12 @@ Html;
                     $addrip = (filter_var(Typecho_Request::getInstance()->get("attack"), FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)?"(外网地址)":"(内网地址)").$addr;
                 }
             }
+            $url = Typecho_Common::url('extending.php?' .http_build_query(
+                        array(
+                        'panel' => 'HoneyPot/HoneyPotconsole.php',
+                        'action' => 'index'
+                    )),
+            Typecho_Widget::widget('Widget_Options')->adminUrl);
             return <<<Html
 <style type="text/css">
 {$this->style}
@@ -69,6 +75,7 @@ Html;
         <div class="row typecho-page-main" role="main">
             <div class="col-mb-12">
                 <ul class="typecho-option-tabs fix-tabs clearfix">
+                    <li><a href="{$url}">{$this->bar('返回控制台主页')}</a></li>
                     <li class="current"><a href="#">{$this->bar($addrip.' 访问记录')}</a></li>
                     <li><a href="{$this->pluginurl}">{$this->bar('插件设置')}</a></li>
                 </ul>
@@ -93,8 +100,8 @@ Html;
                 if($this->variable["honeylogs"][0]["total"]>0){
                     $honeylogs .= "<li>";
                     foreach ($this->variable["honeylogs"] as $value) {
-                        $honeylogs .= "<b><a href=\"javascript::void();\">最后踩罐：".date('Y年m月d日 H:i:s',$value['time'])."</a></b>";
-                        $honeylogs .= "<p><span>访问地址 : </span><a href=\"{$url}&attack={$value['client_ip']}\">".htmlspecialchars(urldecode($value['url']))."</a></p>";
+                        $honeylogs .= "<b><a>最后踩罐：".date('Y年m月d日 H:i:s',$value['time'])."</a></b>";
+                        $honeylogs .= "<p><span>访问地址 : </span><a>".htmlspecialchars(urldecode($value['url']))."</a></p>";
                         $honeylogs .= "<p><span>踩罐者IP : </span>";
                         array_map(function($ip) use (&$honeylogs,$url){
                             $ipcontent = ["url"=>"","intranet"=>"","Account"=>""];
@@ -102,7 +109,7 @@ Html;
                                 $ipcontent["url"] = "{$url}&attack={$ip}&isContain=1";
                                 $ipcontent["intranet"] = "内网地址";
                             } else {
-                                $ipcontent["url"] = "https://tool.chinaz.com/ipwhois/?q={$ip}";
+                                $ipcontent["url"] = "{$url}&attack={$ip}&isContain=1";
                                 $ipcontent["intranet"] = "外网地址";
                             }
                             if(array_key_exists("ipandaccount",$this->variable)){
@@ -246,10 +253,11 @@ Html;
                     if(Typecho_Request::getInstance()->get("action") == "detailed"){
                         $tbody .= "<b><a href=\"javascript::void();\">时间：".date('Y年m月d日 H:i:s',$value['time'])."</a></b>";
                         if(!Typecho_Request::getInstance()->get("attack") || Typecho_Request::getInstance()->get("attack")=="all"){
-                            if(!filter_var($value['client_ip'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE))
+                            if(!filter_var($value['client_ip'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)){
                                 $tbody .= "<p><span>来访者IP : </span><a href=\"{$url}&attack={$value['client_ip']}\">{$value['client_ip']}(内网地址)</a></p>";
-                            else
-                                $tbody .= "<p><span>来访者IP : </span><a target=\"_blank\" href=\"https://tool.chinaz.com/ipwhois/?q={$value['client_ip']}\">{$value['client_ip']}(公网地址)</a></p>";
+                            } else {
+                                $tbody .= "<p><span>来访者IP : </span><a target=\"_blank\" href=\"https://tool.chinaz.com/ipwhois/?q={$value['client_ip']}\">{$value['client_ip']}(外网地址)</a></p>";
+                            }
                         }
                         if(strstr($value['vulnerability'],"正常访问")){
                             $tbody .= "<p> {$value['vulnerability']}</p>";
@@ -289,7 +297,7 @@ Html;
                         if(!filter_var($value['client_ip'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)){
                             $tbody .= "<p><span>来访者IP : </span><a href=\"{$url}&attack={$value['client_ip']}\">{$value['client_ip']}(内网地址)</a></p>";
                         } else {
-                            $tbody .= "<p><span>来访者IP : </span><a target=\"_blank\" href=\"https://tool.chinaz.com/ipwhois/?q={$value['client_ip']}\">{$value['client_ip']}(公网地址)</a></p>";
+                            $tbody .= "<p><span>来访者IP : </span><a target=\"_blank\" href=\"https://tool.chinaz.com/ipwhois/?q={$value['client_ip']}\">{$value['client_ip']}(公网地址)</a>&emsp;<a target=\"_blank\" href=\"https://tool.chinaz.com/ipwhois/?q={$value['client_ip']}\">Whois查询</a></p>";
                         }
                         if($ipcontent){
                             $tbody .= "<p><span>第三方账号 : </span></span><a href=\"#\">{$ipcontent}</a></p>";

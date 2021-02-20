@@ -108,7 +108,7 @@ class HoneyPot_Plugin implements Typecho_Plugin_Interface
         $block = new Typecho_Widget_Helper_Form_Element_Radio('block',
             array('1' => _t('是'),
             '0' => _t('否')),
-            '0', _t('攻击者URL跳转'));
+            '0', _t('攻击者阻断跳转'));
         $HoneyPotTpl = new Typecho_Widget_Helper_Form_Element_Checkbox('HoneyPotTpl',
             array('AdminHoneyPot' => _t('Admin蜜罐模板'),
             'ThinkPHPHoneyPot' => _t('ThinkPHP蜜罐')),
