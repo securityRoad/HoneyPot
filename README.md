@@ -1,10 +1,10 @@
 # Typecho :honeybee: 蜜罐 :honey_pot: /日志审计安全插件
 
 [![PHP Version](https://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg)](http://www.php.net/)
-[![HoneyPot Plugin Version](https://img.shields.io/badge/HoneyPot%20Version-v1.0-red.svg)]()
-[![HoneyPot Plugin Package Size](https://img.shields.io/badge/Compressed%20Package%20Size-24KB-blue.svg)]()
+[![HoneyPot Plugin Version](https://img.shields.io/badge/HoneyPot%20Version-v1.0-red.svg)](https://github.com/securityRoad/HoneyPot)
+[![HoneyPot Plugin Package Size](https://img.shields.io/badge/Compressed%20Package%20Size-24KB-blue.svg)](https://github.com/securityRoad/HoneyPot)
 
-[![](https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2216788854,1851210222&fm=26&gp=0.jpg)]()
+[![](https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2216788854,1851210222&fm=26&gp=0.jpg)](https://github.com/securityRoad/HoneyPot)
 
 ### 现有功能概括
 - 蜜罐功能
