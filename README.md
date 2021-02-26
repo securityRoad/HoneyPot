@@ -19,7 +19,6 @@
 - 插件安全化（识别到攻击身份登录后台后无法操作本插件）
 
 ### 待完善功能
-- 静态文件请求捕获（WEB容器日志）
 - Payload打包
 - 账号密码字典打包
 - 数据备份
@@ -65,5 +64,8 @@
        /** 数据库关键字 */
       const KEYWORDS = '*PRIMARY|AND|OR|LIKE|BINARY|BY|DISTINCT|AS|IN|IS|NULL|NOTLIKE';
     ```
+6. 蜜罐地址
+    - http://host/admin
+    - http://host/thinkphp
 
 [gitee地址](https://gitee.com/securityRoad/HoneyPot)
